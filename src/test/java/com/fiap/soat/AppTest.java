@@ -1,6 +1,6 @@
 package com.fiap.soat;
 
-import junit.framework.Test;
+import junit.frameworkm.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
