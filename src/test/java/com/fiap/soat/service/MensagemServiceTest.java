@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -84,7 +85,22 @@ public class MensagemServiceTest {
 
     @Test
     void devePermitirObterMensagens(){
-        fail("lógica não implementada");
+        // Arrange
+        var mensagem1 = gerarMensagem();
+        var mensagem2 = gerarMensagem();
+        mensagem2.setConteudo("conteudo 2");
+
+        when(mensagemRepository.findAllByUsuario(any(String.class))).thenReturn(List.of(mensagem1, mensagem2));
+
+        // Act
+        var mensagensObtidas = mensagemService.obterMensagens(mensagem1.getUsuario());
+
+        // Assert
+        verify(mensagemRepository, times(1)).findAllByUsuario(any(String.class));
+        assertThat(mensagensObtidas).size().isEqualTo(2);
+        assertThat(mensagensObtidas.get(0)).isEqualTo(mensagem1);
+        assertThat(mensagensObtidas.get(1)).isEqualTo(mensagem2);
+
     }
 
 

@@ -11,5 +11,6 @@ public interface MensagemService {
 
     Mensagem obterMensagem(UUID id);
 
+    List<Mensagem> obterMensagens(String usuario);
 
 }

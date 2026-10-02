@@ -6,6 +6,7 @@ import com.fiap.soat.repository.MensagemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
@@ -29,6 +30,12 @@ public class MensagemServiceImpl implements MensagemService {
         return mensagemRepository.findById(id).orElseThrow(() -> new MensagemNotFoundException("Mensagem não encontrada"));
 
     }
+
+    @Override
+    public List<Mensagem> obterMensagens(String usuario){
+        return mensagemRepository.findAllByUsuario(usuario);
+    }
+
 
 
 }
