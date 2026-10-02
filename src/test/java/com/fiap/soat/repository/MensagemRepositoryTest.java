@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.fiap.soat.helper.MensagemHelper.gerarMensagem;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -84,11 +85,4 @@ public class MensagemRepositoryTest {
         verify(mensagemRepository, times(1)).deleteById(id);
     }
 
-
-    private Mensagem gerarMensagem(){
-        return Mensagem.builder()
-                .usuario("usuario")
-                .conteudo("conteudo")
-                .build();
-    }
 }
