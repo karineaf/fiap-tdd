@@ -73,7 +73,6 @@
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
       <version>${junit.version}</version>
-
     </dependency>
 
     <dependency>
@@ -93,8 +92,8 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
+      <version>1.18.32</version>
     </dependency>
-
 
   </dependencies>
 </project>
