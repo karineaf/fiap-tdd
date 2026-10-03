@@ -1,8 +1,9 @@
 package com.fiap.soat.service;
 
 import com.fiap.soat.model.Mensagem;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface MensagemService {
@@ -11,6 +12,9 @@ public interface MensagemService {
 
     Mensagem obterMensagem(UUID id);
 
-    List<Mensagem> obterMensagens(String usuario);
+    Mensagem atualizarMensagem (UUID id, Mensagem mensagemNova);
 
+    boolean removerMensagem(UUID id);
+
+    Page<Mensagem> obterMensagens(Pageable pageable);
 }

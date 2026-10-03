@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -62,6 +61,8 @@ public class MensagemServiceTest {
 
         assertThat(mensagemRegistrada.getConteudo())
                 .isEqualTo(mensagem.getConteudo());
+
+        verify(mensagemRepository, times(1)).save(mensagem);
     }
 
 
@@ -85,33 +86,55 @@ public class MensagemServiceTest {
 
     @Test
     void devePermitirObterMensagens(){
-        // Arrange
-        var mensagem1 = gerarMensagem();
-        var mensagem2 = gerarMensagem();
-        mensagem2.setConteudo("conteudo 2");
-
-        when(mensagemRepository.findAllByUsuario(any(String.class))).thenReturn(List.of(mensagem1, mensagem2));
-
-        // Act
-        var mensagensObtidas = mensagemService.obterMensagens(mensagem1.getUsuario());
-
-        // Assert
-        verify(mensagemRepository, times(1)).findAllByUsuario(any(String.class));
-        assertThat(mensagensObtidas).size().isEqualTo(2);
-        assertThat(mensagensObtidas.get(0)).isEqualTo(mensagem1);
-        assertThat(mensagensObtidas.get(1)).isEqualTo(mensagem2);
+        fail("lógica não implementada");
 
     }
 
 
     @Test
     void devePermitirModificarMensagem(){
-        fail("lógica não implementada");
+        var id = randomUUID();
+        var mensagemAntiga = gerarMensagem();
+        mensagemAntiga.setId(id);
+        var mensagemNova = mensagemAntiga;
+        mensagemNova.setConteudo("conteudo_teste");
+
+        when(mensagemRepository.findById(any(UUID.class))).thenReturn(Optional.of(mensagemAntiga));
+
+        when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagemNova);
+
+        var mensagemObtida = mensagemService.atualizarMensagem(id, mensagemNova);
+
+        assertThat(mensagemObtida)
+                .isInstanceOf(Mensagem.class)
+                .isNotNull();
+
+        assertThat(mensagemObtida.getId())
+                .isEqualTo(mensagemNova.getId());
+
+        assertThat(mensagemObtida.getUsuario())
+                .isEqualTo(mensagemNova.getUsuario());
+
+        assertThat(mensagemObtida.getConteudo())
+                .isEqualTo(mensagemNova.getConteudo());
+
+        verify(mensagemRepository, times(1)).save(any(Mensagem.class));
+
     }
 
 
     @Test
     void devePermitirRemoverMensagem(){
-        fail("lógica não implementada");
+
+        var id = randomUUID();
+        var mensagem = gerarMensagem();
+        mensagem.setId(id);
+
+        when(mensagemRepository.findById(any(UUID.class))).thenReturn(Optional.of(mensagem));
+
+        boolean mensagemRemovida = mensagemService.removerMensagem(id);
+
+        assertThat(mensagemRemovida).isTrue();
+        verify(mensagemRepository, times(1)).delete(any(Mensagem.class));
     }
 }

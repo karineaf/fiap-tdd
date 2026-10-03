@@ -16,6 +16,14 @@ spring:
   jpa:
     database: h2
     database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+  sql:
+    init:
+      mode: always
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
   h2:
     console:
       enabled: true
