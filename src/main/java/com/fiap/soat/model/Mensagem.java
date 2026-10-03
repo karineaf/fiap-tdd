@@ -37,10 +37,10 @@ public class Mensagem {
     private int gostei = 0;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSS")
     private LocalDateTime dataCriacao;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSS")
     private LocalDateTime dataAlteracao;
 }
