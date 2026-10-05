@@ -1,5 +1,6 @@
 package com.fiap.soat.controller;
 
+import com.fiap.soat.exception.MensagemNotFoundException;
 import com.fiap.soat.handler.GlobalExceptionHandler;
 import com.fiap.soat.model.Mensagem;
 import com.fiap.soat.service.MensagemService;
@@ -10,14 +11,18 @@ import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.UUID;
+
 import static com.fiap.soat.helper.MensagemHelper.gerarMensagem;
 import static com.fiap.soat.helper.StringConverter.asJsonString;
+import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,8 +78,60 @@ public class MensagemControllerTest {
     }
 
     @Test
-    void devePermitirObterMensagem(){
-        fail("não implementado");
+    void devePermitirObterMensagem() throws Exception {
+        // Arrange
+
+        var id = UUID.fromString("046a6d68-7325-40ca-8ba9-974d1f189fac");
+        var mensagemResponse = gerarMensagem();
+        mensagemResponse.setId(id);
+        mensagemResponse.setDataAlteracao(now());
+        mensagemResponse.setDataCriacao(now());
+
+        // Act + Assert
+        when(mensagemService.obterMensagem(any(UUID.class))).thenReturn(mensagemResponse);
+
+        mock.perform(get("/mensagens/{id}", id)
+                .contentType(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(mensagemService, times(1)).obterMensagem(any(UUID.class));
+
+    }
+
+    @Test
+    void deveGerarExcecaoAoObterMensagemComIDNaoExistente() throws Exception {
+        // Arrange
+
+        var id = UUID.fromString("123a6d68-7325-40ca-8ba9-974d1f189456");
+        var mensagemResponse = gerarMensagem();
+        mensagemResponse.setId(id);
+        mensagemResponse.setDataAlteracao(now());
+        mensagemResponse.setDataCriacao(now());
+
+        // Act + Assert
+        when(mensagemService.obterMensagem(any(UUID.class))).thenThrow( new MensagemNotFoundException("mensagem não encontrada"));
+
+        mock.perform(get("/mensagens/{id}", id)
+                        .contentType(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        verify(mensagemService, times(1)).obterMensagem(any(UUID.class));
+
+    }
+
+    @Test
+    void deveGerarExcecaoAoObterMensagemComIDEmBranco() throws Exception {
+        // Arrange
+
+        var id = "123";
+
+        mock.perform(get("/mensagens/{id}", id)
+                        .contentType(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
     }
 
     @Test

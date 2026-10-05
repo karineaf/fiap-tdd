@@ -95,5 +95,23 @@
       <version>1.18.32</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.groovy</groupId>
+          <artifactId>groovy</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.groovy</groupId>
+          <artifactId>groovy-xml</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+
   </dependencies>
 </project>
