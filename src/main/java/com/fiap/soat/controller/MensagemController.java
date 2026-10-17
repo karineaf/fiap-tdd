@@ -12,6 +12,8 @@ import java.util.UUID;
 import static java.util.UUID.fromString;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.noContent;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/mensagens")
@@ -39,10 +41,26 @@ public class MensagemController {
             return new ResponseEntity<>(mensagemEncontrada,OK);
 
         } catch (MensagemNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body("mensagem não encontrada");
+            return status(NOT_FOUND).body("mensagem não encontrada");
         } catch (IllegalArgumentException e){
-            return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
+            return status(BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removerMensagem(@PathVariable String id){
+        try {
+            var uuid = fromString(id);
+            var mensagemRemovida = mensagemService.removerMensagem(uuid);
+            if (mensagemRemovida)
+                return noContent().build();
+        } catch (MensagemNotFoundException e) {
+            return status(NOT_FOUND).body("mensagem não encontrada para remover");
+        } catch (IllegalArgumentException e) {
+            return status(BAD_REQUEST).body("ID inválido: " + e.getMessage());
+        }
+        return null;
+    }
+
 
 }
