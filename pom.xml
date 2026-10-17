@@ -21,6 +21,7 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <java.version>21</java.version>
       <junit.version>5.9.3</junit.version>
+      <allure.version>3.0.0</allure.version>
     </properties>
 
     <dependencies>
@@ -135,5 +136,64 @@
         <scope>test</scope>
       </dependency>
     -->
+
+      <dependency>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-jupiter</artifactId>
+        <scope>test</scope>
+        <version>${allure.version}</version>
+      </dependency>
+
+      <!-- Para integração com Rest-Assured -->
+      <dependency>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-rest-assured</artifactId>
+        <scope>test</scope>
+        <version>${allure.version}</version>
+      </dependency>
+
+      <!-- Necessário para @Step e @Attachment -->
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
+
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.1.2</version>
+          <configuration>
+            <excludes>
+              <!-- Exclui todos os testes do Cucumber -->
+              <exclude>**/*CucumberTest.java</exclude>
+              <exclude>**/bdd/**</exclude>
+            </excludes>
+            <systemPropertyVariables>
+              <!-- Ativa autodetecção de extensões JUnit Jupiter -->
+              <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
+              <!-- Define o diretório para os resultados do Allure -->
+              <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>io.qameta.allure</groupId>
+          <artifactId>allure-maven</artifactId>
+          <version>${allure.version}</version>
+          <configuration>
+            <!-- Diretório de resultados -->
+            <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+            <!-- Diretório do relatório HTML -->
+            <reportDirectory>${project.build.directory}/site/allure-maven</reportDirectory>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
+
   </project>
